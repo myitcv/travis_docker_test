@@ -1,0 +1,15 @@
+language: generic
+sudo: required
+
+matrix:
+  include:
+    - env: CHROMEDRIVER_VERSION=2.40 CHROME_CHANNEL=beta
+
+services:
+  - docker
+
+before_install:
+  - docker build -q --build-arg USER=$USER --build-arg UID=$UID -t monorepo .
+
+script:
+  - docker run -e CHROMEDRIVER_VERSION -e CHROME_CHANNEL -v $PWD:/build -w /build --rm monorepo ./_scripts/run_tests.sh
